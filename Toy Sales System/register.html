@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Smiles and Sunshine Toys</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Smiles and Sunshine Toys</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.php">Home</a></li>
+                    <li><a href="register.html">Register</a></li>
+                    <li><a href="#" id="loginLink">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="registration">
+            <div class="container">
+                <h2>Create Account</h2>
+                <div class="tabs">
+                    <button class="tab-link active" data-tab="customer">Customer Registration</button>
+                    <button class="tab-link" data-tab="sales">Sales Staff Registration</button>
+                </div>
+
+                <!-- Customer Registration Form -->
+                <div id="customer" class="tab-content active">
+                    <form id="customerForm">
+                        <div class="form-group">
+                            <label for="customerName">Name:</label>
+                            <input type="text" id="customerName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerEmail">Email:</label>
+                            <input type="email" id="customerEmail" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPhone">Phone Number:</label>
+                            <input type="tel" id="customerPhone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPassword">Password:</label>
+                            <input type="password" id="customerPassword" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password:</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="customerTerms" name="terms" required>
+                            <label for="customerTerms">I agree to the terms and conditions</label>
+                        </div>
+                        <button type="submit" class="btn">Register</button>
+                    </form>
+                </div>
+
+                <!-- Sales Staff Registration Form -->
+                <div id="sales" class="tab-content">
+                    <form id="salesForm">
+                        <div class="form-group">
+                            <label for="salesName">Name:</label>
+                            <input type="text" id="salesName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="salesEmail">Email:</label>
+                            <input type="email" id="salesEmail" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="salesPhone">Phone Number:</label>
+                            <input type="tel" id="salesPhone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="employeeId">Employee ID:</label>
+                            <input type="text" id="employeeId" name="employee_id" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="salesPassword">Password:</label>
+                            <input type="password" id="salesPassword" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="salesConfirmPassword">Confirm Password:</label>
+                            <input type="password" id="salesConfirmPassword" name="confirmPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="salesTerms" name="terms" required>
+                            <label for="salesTerms">I agree to the terms and conditions</label>
+                        </div>
+                        <button type="submit" class="btn">Register</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="userType">User Type:</label>
+                    <select id="userType" name="userType" required>
+                        <option value="customer">Customer</option>
+                        <option value="sales">Sales Staff</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Smiles and Sunshine Toys Limited</p>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            // Login modal functionality
+            $('#loginLink').click(function(e) {
+                e.preventDefault();
+                $('#loginModal').show();
+            });
+            
+            $('.close').click(function() {
+                $('#loginModal').hide();
+            });
+            
+            $(window).click(function(e) {
+                if ($(e.target).is('#loginModal')) {
+                    $('#loginModal').hide();
+                }
+            });
+            
+            // Tab functionality
+            $('.tab-link').click(function() {
+                var tabId = $(this).data('tab');
+                
+                $('.tab-link').removeClass('active');
+                $(this).addClass('active');
+                
+                $('.tab-content').removeClass('active');
+                $('#' + tabId).addClass('active');
+            });
+            
+          // Customer registration form submission
+$('#customerForm').submit(function(e) {
+    e.preventDefault();
+    
+    var password = $('#customerPassword').val();
+    var confirmPassword = $('#confirmPassword').val();
+    
+    if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+    }
+    
+    if (!$('#customerTerms').is(':checked')) {
+        alert('Please agree to the terms and conditions!');
+        return;
+    }
+    
+    var formData = $(this).serialize();
+    
+    $.ajax({
+        url: 'php/register.php',
+        type: 'POST',
+        data: formData + '&userType=customer',
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                alert(response.message);
+                if (response.redirect) {
+                    window.location.href = response.redirect;
+                } else if (response.userType === 'customer') {
+                    window.location.href = 'customer_dashboard.php';
+                } else {
+                    window.location.href = 'sales_dashboard.php';
+                }
+            } else {
+                alert('Registration failed: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX Error:", status, error);
+            alert('Error occurred during registration! Please check console for details.');
+        }
+    });
+});
+
+// Sales staff registration form submission
+$('#salesForm').submit(function(e) {
+    e.preventDefault();
+    
+    var password = $('#salesPassword').val();
+    var confirmPassword = $('#salesConfirmPassword').val();
+    
+    if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+    }
+    
+    if (!$('#salesTerms').is(':checked')) {
+        alert('Please agree to the terms and conditions!');
+        return;
+    }
+    
+    var formData = $(this).serialize();
+    
+    $.ajax({
+        url: 'php/register.php',
+        type: 'POST',
+        data: formData + '&userType=sales',
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                alert(response.message);
+                if (response.redirect) {
+                    window.location.href = response.redirect;
+                } else if (response.userType === 'customer') {
+                    window.location.href = 'customer_dashboard.php';
+                } else {
+                    window.location.href = 'sales_dashboard.php';
+                }
+            } else {
+                alert('Registration failed: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX Error:", status, error);
+            alert('Error occurred during registration! Please check console for details.');
+        }
+    });
+});
+            
+            // Login form submission
+            $('#loginForm').submit(function(e) {
+                e.preventDefault();
+                
+                var formData = $(this).serialize();
+                
+                $.ajax({
+                    url: 'php/login.php',
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        try {
+                            var result = JSON.parse(response);
+                            if (result.success) {
+                                alert('Login successful!');
+                                if (result.userType === 'customer') {
+                                    window.location.href = 'customer_dashboard.php';
+                                } else {
+                                    window.location.href = 'sales_dashboard.php';
+                                }
+                            } else {
+                                alert('Login failed: ' + result.message);
+                            }
+                        } catch (e) {
+                            alert('Error occurred during login!');
+                        }
+                    },
+                    error: function() {
+                        alert('Error occurred during login!');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
